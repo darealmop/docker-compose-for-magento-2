@@ -31,6 +31,8 @@ services:
       #- ./backend/${BACKEND_VENDOR_NAME}:/var/www/html/app/code/${BACKEND_VENDOR_NAME}
     networks:
       - magento
+    tty: true
+    stdin_open: true
 
   redis:
     image: redis:${REDIS_VERSION}
