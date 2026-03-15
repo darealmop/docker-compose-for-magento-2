@@ -1,6 +1,12 @@
 FROM php:7.4-fpm-buster
 
-RUN apt-get update && apt-get install -y \
+# Fix für EOL Debian Buster Repositories
+RUN sed -i 's/deb.debian.org/archive.debian.org/g' /etc/apt/sources.list && \
+    sed -i 's|security.debian.org/debian-security|archive.debian.org/debian-security|g' /etc/apt/sources.list && \
+    sed -i '/stretch-updates/d' /etc/apt/sources.list
+
+# WICHTIG: -o Acquire::Check-Valid-Until=false wegen veralteter Release-Files
+RUN apt-get -o Acquire::Check-Valid-Until=false update && apt-get install -y \
   cron \
   git \
   gzip \
@@ -19,7 +25,7 @@ RUN apt-get update && apt-get install -y \
   vim \
   zip \
   mc
-
+  
 RUN docker-php-ext-configure gd --with-freetype --with-jpeg
 
 RUN docker-php-ext-install \
